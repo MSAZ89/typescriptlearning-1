@@ -29,7 +29,6 @@ const App = () => {
   const emailRef = useRef<HTMLInputElement>(null);
   const [contacted, setContacted] = useState<boolean>(false);
   const [people, setPeople] = useState<Person[]>([]);
-  const [columnCount, setColumnCount] = useState<number>(1);
   const addToPeople = () => {
     if (nameInputRef.current !== null && phoneInputRef.current !== null) {
       if (
@@ -70,7 +69,7 @@ const App = () => {
   return (
     <MainLayout>
       {/*BEGIN PERSONAL INFO*/}
-      <div className="sm:flex gap-2">
+      <section className="sm:flex gap-2">
         {/*name*/}
         <div className="sm:w-1/4">
           <label className="block mb-2 font-bold">Name</label>
@@ -84,11 +83,7 @@ const App = () => {
         {/*age*/}
         <div className="sm:w-1/4">
           <label className="block mb-2 font-bold">Phone</label>
-          <input
-            type="text"
-            className="block mb-2 w-full"
-            ref={phoneInputRef}
-          />
+          <input type="tel" className="block mb-2 w-full" ref={phoneInputRef} />
         </div>
         {/*contacted*/}
         <div className="sm:w-1/4">
@@ -100,52 +95,41 @@ const App = () => {
             onChange={() => setContacted(!contacted)}
           />
         </div>
-      </div>
+      </section>
       {/*Notes*/}
-      <div>
+      <section>
         <label className="block mb-2 font-bold">Notes</label>
         <textarea
           rows={5}
           className="block mb-2 w-full p-2"
           ref={notesRef}
         ></textarea>
-      </div>
-      {/*Add to people button, column count, and clear all button*/}
-      <div className="flex gap-8 items-center justify-between my-4 bg-slate-50 p-4">
+      </section>
+      {/*Add to people button and clear all button*/}
+      <section className="flex gap-8 items-center justify-between my-4 bg-slate-50 p-4">
         <button
           className="bg-sky-500 hover:bg-sky-700 transition-all p-2 rounded text-white h-10"
           onClick={() => addToPeople()}
         >
           Add to people
         </button>{" "}
-        {/*select dropdown for column count*/}
-        <div className="mt-4 flex gap-4">
-          <label className="mb-2 font-bold">Column Count</label>
-          <select
-            className="mb-2 w-auto p-2"
-            onChange={(e) => setColumnCount(parseInt(e.target.value))}
-          >
-            <option value="1">1</option>
-            <option value="2">2</option>
-          </select>
-        </div>
         <button
           className="bg-red-300 hover:bg-red-500 transition-all p-2 rounded text-white h-10"
           onClick={() => removeAllPeople()}
         >
           Clear All
         </button>
-      </div>
+      </section>
       {/*Show people stats*/}
-      <div className="my-8 mx-auto text-center">
+      <section className="my-8 mx-auto text-center">
         <h2 className="text-2xl font-bold">People</h2>
         <p className="text-sm">
           {people.length} people in list, {contactedPeople.length}{" "}
           {contactedPeople.length === 1 ? "person" : "people"} contacted
         </p>
-      </div>
+      </section>
       {/*People list*/}
-      <div className={"grid grid-cols-" + columnCount}>
+      <section className={"grid grid-cols-1"}>
         {people.map((person, index) => {
           return (
             <li
@@ -206,7 +190,7 @@ const App = () => {
             </li>
           );
         })}
-      </div>
+      </section>
     </MainLayout>
   );
 };
