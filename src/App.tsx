@@ -1,7 +1,6 @@
 import MainLayout from "./layouts/mainlayout";
 import { useRef, useState } from "react";
 
-//person object with constructor
 class Person {
   name: string;
   phone: string;
@@ -29,11 +28,8 @@ const App = () => {
   const notesRef = useRef<HTMLTextAreaElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const [contacted, setContacted] = useState<boolean>(false);
-  //stateful array to store people
   const [people, setPeople] = useState<Person[]>([]);
-
   const [columnCount, setColumnCount] = useState<number>(1);
-
   const addToPeople = () => {
     if (nameInputRef.current !== null && phoneInputRef.current !== null) {
       if (
@@ -52,20 +48,16 @@ const App = () => {
       }
     }
   };
-
   const removeFromPeople = (index: number) => {
     //remove person from people array
     setPeople(people.filter((person, i) => i !== index));
   };
-
   //function to remove all people from the people array
   const removeAllPeople = () => {
     setPeople([]);
   };
-
   //filter for people who have been contacted
   const contactedPeople = people.filter((person) => person.contacted);
-
   //function to toggle contacted on a person index in the people array
   const toggleContacted = (index: number) => {
     //create a copy of the people array
@@ -75,7 +67,6 @@ const App = () => {
     //set the people array to the copy
     setPeople(peopleCopy);
   };
-
   return (
     <MainLayout>
       {/*BEGIN PERSONAL INFO*/}
@@ -110,7 +101,6 @@ const App = () => {
           />
         </div>
       </div>
-
       {/*Notes*/}
       <div>
         <label className="block mb-2 font-bold">Notes</label>
@@ -120,7 +110,6 @@ const App = () => {
           ref={notesRef}
         ></textarea>
       </div>
-
       {/*Add to people button, column count, and clear all button*/}
       <div className="flex gap-8 items-center justify-between my-4 bg-slate-50 p-4">
         <button
@@ -147,7 +136,6 @@ const App = () => {
           Clear All
         </button>
       </div>
-
       {/*Show people stats*/}
       <div className="my-8 mx-auto text-center">
         <h2 className="text-2xl font-bold">People</h2>
@@ -156,7 +144,6 @@ const App = () => {
           {contactedPeople.length === 1 ? "person" : "people"} contacted
         </p>
       </div>
-
       {/*People list*/}
       <div className={"grid grid-cols-" + columnCount}>
         {people.map((person, index) => {
@@ -223,5 +210,4 @@ const App = () => {
     </MainLayout>
   );
 };
-
 export default App;
