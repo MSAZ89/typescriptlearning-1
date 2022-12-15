@@ -4,19 +4,19 @@ import { useRef, useState } from "react";
 //person object with constructor
 class Person {
   name: string;
-  age: number;
+  phone: string;
   notes: string;
   email: string;
   contacted: boolean;
   constructor(
     name: string,
-    age: number,
+    phone: string,
     notes: string,
     email: string,
     contacted: boolean
   ) {
     this.name = name;
-    this.age = age;
+    this.phone = phone;
     this.notes = notes;
     this.email = email;
     this.contacted = contacted;
@@ -25,7 +25,7 @@ class Person {
 
 const App = () => {
   const nameInputRef = useRef<HTMLInputElement>(null);
-  const ageInputRef = useRef<HTMLInputElement>(null);
+  const phoneInputRef = useRef<HTMLInputElement>(null);
   const notesRef = useRef<HTMLTextAreaElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const [contacted, setContacted] = useState<boolean>(false);
@@ -35,13 +35,13 @@ const App = () => {
   const [columnCount, setColumnCount] = useState<number>(1);
 
   const addToPeople = () => {
-    if (nameInputRef.current !== null && ageInputRef.current !== null) {
+    if (nameInputRef.current !== null && phoneInputRef.current !== null) {
       if (
         nameInputRef.current.value !== "" &&
-        ageInputRef.current.value !== ""
+        phoneInputRef.current.value !== ""
       ) {
         const name = nameInputRef.current.value;
-        const age = parseInt(ageInputRef.current.value);
+        const age = parseInt(phoneInputRef.current.value);
         const des = notesRef.current?.value || "";
         const email = emailRef.current?.value || "";
         //create new person object
@@ -57,6 +57,14 @@ const App = () => {
     //remove person from people array
     setPeople(people.filter((person, i) => i !== index));
   };
+
+  //function to remove all people from the people array
+  const removeAllPeople = () => {
+    setPeople([]);
+  };
+
+  //filter for people who have been contacted
+  const contactedPeople = people.filter((person) => person.contacted);
 
   //function to toggle contacted on a person index in the people array
   const toggleContacted = (index: number) => {
@@ -84,11 +92,11 @@ const App = () => {
         </div>
         {/*age*/}
         <div className="sm:w-1/4">
-          <label className="block mb-2 font-bold">Age</label>
+          <label className="block mb-2 font-bold">Phone</label>
           <input
             type="number"
             className="block mb-2 w-full"
-            ref={ageInputRef}
+            ref={phoneInputRef}
           />
         </div>
         {/*contacted*/}
@@ -96,7 +104,7 @@ const App = () => {
           <label className="block mb-2 font-bold">Contacted</label>
           <input
             type="checkbox"
-            className="block mb-2"
+            className="block mb-2 accent-sky-500"
             checked={contacted}
             onChange={() => setContacted(!contacted)}
           />
@@ -113,15 +121,14 @@ const App = () => {
         ></textarea>
       </div>
 
+      {/*Add to people button, column count, and clear all button*/}
       <div className="flex gap-8 items-center justify-between my-4 bg-slate-50 p-4">
-        {/*Add to people button*/}
         <button
-          className="bg-sky-500 p-2 rounded text-white h-10"
+          className="bg-sky-500 hover:bg-sky-700 transition-all p-2 rounded text-white h-10"
           onClick={() => addToPeople()}
         >
           Add to people
-        </button>
-
+        </button>{" "}
         {/*select dropdown for column count*/}
         <div className="mt-4 flex gap-4">
           <label className="mb-2 font-bold">Column Count</label>
@@ -133,10 +140,25 @@ const App = () => {
             <option value="2">2</option>
           </select>
         </div>
+        <button
+          className="bg-red-300 hover:bg-red-500 transition-all p-2 rounded text-white h-10"
+          onClick={() => removeAllPeople()}
+        >
+          Clear All
+        </button>
       </div>
 
+      {/*Show people stats*/}
+      <div className="my-8 mx-auto text-center">
+        <h2 className="text-2xl font-bold">People</h2>
+        <p className="text-sm">
+          {people.length} people in list, {contactedPeople.length}{" "}
+          {contactedPeople.length === 1 ? "person" : "people"} contacted
+        </p>
+      </div>
+
+      {/*People list*/}
       <div className={"grid grid-cols-" + columnCount}>
-        {/*People list*/}
         {people.map((person, index) => {
           return (
             <li
@@ -162,7 +184,21 @@ const App = () => {
                   </span>
                 </p>
                 <p className="font-light">
-                  {person.email} - {person.age} years old
+                  <a
+                    href={"tel: + 1" + person.phone}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {person.phone}
+                  </a>{" "}
+                  -{" "}
+                  <a
+                    href={"mailto: " + person.email}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {person.email}
+                  </a>
                 </p>
                 <p className="text-md font-light my-4 transition-all">
                   {person.notes}
