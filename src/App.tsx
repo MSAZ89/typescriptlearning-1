@@ -85,7 +85,7 @@ const App = () => {
         <div className="sm:w-1/4">
           <label className="block mb-2 font-bold">Phone</label>
           <input
-            type="number"
+            type="text"
             className="block mb-2 w-full"
             ref={phoneInputRef}
           />
