@@ -41,11 +41,11 @@ const App = () => {
         phoneInputRef.current.value !== ""
       ) {
         const name = nameInputRef.current.value;
-        const age = parseInt(phoneInputRef.current.value);
+        const phone = phoneInputRef.current.value;
         const des = notesRef.current?.value || "";
         const email = emailRef.current?.value || "";
         //create new person object
-        const person = new Person(name, age, des, email, contacted);
+        const person = new Person(name, phone, des, email, contacted);
         //add person to people array
         setPeople([...people, person]);
         console.log(people);
