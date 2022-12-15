@@ -7,7 +7,7 @@ class Person {
   age: number;
   notes: string;
   email: string;
-  contacted: boolean = false;
+  contacted: boolean;
   constructor(
     name: string,
     age: number,
@@ -32,6 +32,8 @@ const App = () => {
   //stateful array to store people
   const [people, setPeople] = useState<Person[]>([]);
 
+  const [columnCount, setColumnCount] = useState<number>(1);
+
   const addToPeople = () => {
     if (nameInputRef.current !== null && ageInputRef.current !== null) {
       if (
@@ -54,6 +56,16 @@ const App = () => {
   const removeFromPeople = (index: number) => {
     //remove person from people array
     setPeople(people.filter((person, i) => i !== index));
+  };
+
+  //function to toggle contacted on a person index in the people array
+  const toggleContacted = (index: number) => {
+    //create a copy of the people array
+    const peopleCopy = [...people];
+    //toggle contacted on the person at index
+    peopleCopy[index].contacted = !peopleCopy[index].contacted;
+    //set the people array to the copy
+    setPeople(peopleCopy);
   };
 
   return (
@@ -94,47 +106,84 @@ const App = () => {
       {/*Notes*/}
       <div>
         <label className="block mb-2 font-bold">Notes</label>
-        <textarea className="block mb-2 w-full p-2" ref={notesRef}></textarea>
+        <textarea
+          rows={5}
+          className="block mb-2 w-full p-2"
+          ref={notesRef}
+        ></textarea>
       </div>
 
-      {/*Add to people button*/}
-      <button
-        className="bg-sky-500 p-2 rounded text-white"
-        onClick={() => addToPeople()}
-      >
-        Add to people
-      </button>
+      <div className="flex gap-8 items-center justify-between my-4 bg-slate-50 p-4">
+        {/*Add to people button*/}
+        <button
+          className="bg-sky-500 p-2 rounded text-white h-10"
+          onClick={() => addToPeople()}
+        >
+          Add to people
+        </button>
 
-      {/*People list*/}
-      {people.map((person, index) => {
-        return (
-          <li
-            key={index}
-            className="bg-slate-50 list-decimal py-4 px-4 rounded my-2 flex gap-4 justify-between hover:bg-white transition-all hover:scale-105 hover:border hover:border-slate-300
-            group"
+        {/*select dropdown for column count*/}
+        <div className="mt-4 flex gap-4">
+          <label className="mb-2 font-bold">Column Count</label>
+          <select
+            className="mb-2 w-auto p-2"
+            onChange={(e) => setColumnCount(parseInt(e.target.value))}
           >
-            <div className="text-lg">
-              <p className="font-bold">
-                {person.name}, {person.age}.
-              </p>
-              <p className={"text-sm group-hover:text-md"}>
-                {person.contacted ? (
-                  <span className="mb-4 transition-all">✔️ Contacted</span>
-                ) : null}
-              </p>
-              <p className="text-md font-light my-2 transition-all group-hover:text-xl">
-                {person.notes}
-              </p>
-            </div>
-            <button
-              onClick={() => removeFromPeople(index)}
-              className="text-red-500 text-sm"
+            <option value="1">1</option>
+            <option value="2">2</option>
+          </select>
+        </div>
+      </div>
+
+      <div className={"grid grid-cols-" + columnCount}>
+        {/*People list*/}
+        {people.map((person, index) => {
+          return (
+            <li
+              key={index}
+              className="bg-slate-50 list-decimal py-4 px-4 rounded m-1 flex gap-8 justify-between hover:bg-white transition-all
+            group"
             >
-              Delete ❌
-            </button>
-          </li>
-        );
-      })}
+              <div className="text-lg">
+                <p className="font-bold">
+                  {person.name}{" "}
+                  <span className={"text-xs group-hover:text-md"}>
+                    {person.contacted ? (
+                      <>
+                        <span className="mb-4 transition-all">
+                          ✔️ Contacted
+                        </span>{" "}
+                      </>
+                    ) : (
+                      <span className="mb-4 transition-all">
+                        ❌ No Contact Made
+                      </span>
+                    )}
+                  </span>
+                </p>
+                <p className="font-light">
+                  {person.email} - {person.age} years old
+                </p>
+                <p className="text-md font-light my-4 transition-all">
+                  {person.notes}
+                </p>
+                <button
+                  className="text-xs mb-2 font-bold transition-all bg-slate-900 text-white rounded py-1 px-3 group-hover:p-2"
+                  onClick={() => toggleContacted(index)}
+                >
+                  {person.contacted ? "Mark Not Contacted" : "Mark Contacted"}
+                </button>
+              </div>
+              <button
+                onClick={() => removeFromPeople(index)}
+                className="text-red-600 text-xs transition-all h-0"
+              >
+                Delete
+              </button>
+            </li>
+          );
+        })}
+      </div>
     </MainLayout>
   );
 };
